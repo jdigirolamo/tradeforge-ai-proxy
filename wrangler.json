@@ -1,0 +1,16 @@
+{
+	"compatibility_date": "2025-10-08",
+	"main": "src/index.ts",
+	"name": "tradeforge-ai-proxy",
+	"upload_source_maps": true,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_id": "11e294dd-2d45-49ca-b56a-318d8b16373d",
+			"database_name": "d1-template-database1"
+		}
+	],
+	"observability": {
+		"enabled": true
+	}
+}
