@@ -1,59 +1,88 @@
-# Worker + D1 Database
+# TradeForge AI Proxy
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/d1-template)
+A serverless AI proxy layer built on **Cloudflare Workers** with **D1** (SQLite at the edge). Routes, logs, and manages AI model API calls for the TradeForge platform — a CRM and automation suite built for Alberta's trades industry.
 
-![Worker + D1 Template Preview](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/cb7cb0a9-6102-4822-633c-b76b7bb25900/public)
+## What It Does
 
-<!-- dash-content-start -->
+- Proxies requests to AI model APIs (Claude, OpenAI) through a secure Cloudflare Worker
+- - Logs all AI interactions to a persistent D1 (SQLite) database at the edge
+  - - Provides a lightweight API layer between the TradeForge frontend and external AI providers
+    - - Enables rate limiting, request logging, and API key management without exposing credentials to the client
+     
+      - ## Tech Stack
+     
+      - | Layer | Technology |
+      - |---|---|
+      - | Edge Runtime | Cloudflare Workers |
+      - | Database | Cloudflare D1 (SQLite) |
+      - | Language | TypeScript |
+      - | Config | Wrangler (wrangler.json) |
+      - | ORM / Query | Prepared Statements via D1 binding |
+     
+      - ## Project Structure
+     
+      - ```
+        tradeforge-ai-proxy/
+        ├── src/
+        │   ├── index.ts          # Worker entry point — handles all incoming requests
+        │   └── renderHtml.ts     # HTML response renderer for debug/status views
+        ├── migrations/           # D1 database schema migrations
+        ├── wrangler.json         # Cloudflare Worker + D1 binding config
+        ├── tsconfig.json         # TypeScript config
+        └── package.json
+        ```
 
-D1 is Cloudflare's native serverless SQL database ([docs](https://developers.cloudflare.com/d1/)). This project demonstrates using a Worker with a D1 binding to execute a SQL statement. A simple frontend displays the result of this query:
+        ## Setup
 
-```SQL
-SELECT * FROM comments LIMIT 3;
-```
+        ### Prerequisites
+        - Node.js 18+
+        - - Cloudflare account with Workers enabled
+          - - Wrangler CLI: `npm install -g wrangler`
+           
+            - ### Local Development
+           
+            - ```bash
+              npm install
+              npx wrangler dev
+              ```
 
-The D1 database is initialized with a `comments` table and this data:
+              ### D1 Database Setup
 
-```SQL
-INSERT INTO comments (author, content)
-VALUES
-    ('Kristian', 'Congrats!'),
-    ('Serena', 'Great job!'),
-    ('Max', 'Keep up the good work!')
-;
-```
+              ```bash
+              # Create the D1 database
+              npx wrangler d1 create tradeforge-proxy-db
 
-> [!IMPORTANT]
-> When using C3 to create this project, select "no" when it asks if you want to deploy. You need to follow this project's [setup steps](https://github.com/cloudflare/templates/tree/main/d1-template#setup-steps) before deploying.
+              # Update database_id in wrangler.json with the output ID
 
-<!-- dash-content-end -->
+              # Run migrations
+              npx wrangler d1 migrations apply --remote tradeforge-proxy-db
+              ```
 
-## Getting Started
+              ### Deploy
 
-Outside of this repo, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/) (the `create-cloudflare` CLI):
+              ```bash
+              npx wrangler deploy
+              ```
 
-```
-npm create cloudflare@latest -- --template=cloudflare/templates/d1-template
-```
+              ## Environment Variables
 
-A live public deployment of this template is available at [https://d1-template.templates.workers.dev](https://d1-template.templates.workers.dev)
+              Set these as Cloudflare Worker secrets:
 
-## Setup Steps
+              ```bash
+              npx wrangler secret put OPENAI_API_KEY
+              npx wrangler secret put ANTHROPIC_API_KEY
+              ```
 
-1. Install the project dependencies with a package manager of your choice:
-   ```bash
-   npm install
-   ```
-2. Create a [D1 database](https://developers.cloudflare.com/d1/get-started/) with the name "d1-template-database":
-   ```bash
-   npx wrangler d1 create d1-template-database
-   ```
-   ...and update the `database_id` field in `wrangler.json` with the new database ID.
-3. Run the following db migration to initialize the database (notice the `migrations` directory in this project):
-   ```bash
-   npx wrangler d1 migrations apply --remote d1-template-database
-   ```
-4. Deploy the project!
-   ```bash
-   npx wrangler deploy
-   ```
+              ## Part of the TradeForge Platform
+
+              This Worker is one component of the **TradeForge** system — a full-stack AI-powered CRM built for HVAC, plumbing, electrical, and general contracting businesses in Calgary and Alberta.
+
+              Related systems:
+              - **TradeForge CRM** — lead tracking, SMS follow-up, job pipeline
+              - - **AI Receptionist** — missed call → SMS automation via n8n + Claude API
+                - - **Cloudflare Pages frontend** — React/TypeScript dashboard
+                 
+                  - ## License
+                 
+                  - MIT
+                  - 
