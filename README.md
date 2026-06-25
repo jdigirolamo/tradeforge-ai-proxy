@@ -12,12 +12,12 @@ A serverless AI proxy layer built on **Cloudflare Workers** with **D1** (SQLite 
       - ## Tech Stack
      
       - | Layer | Technology |
-      - |---|---|
+      - | --- | --- |
       - | Edge Runtime | Cloudflare Workers |
       - | Database | Cloudflare D1 (SQLite) |
       - | Language | TypeScript |
       - | Config | Wrangler (wrangler.json) |
-      - | ORM / Query | Prepared Statements via D1 binding |
+      - | Query Layer | Prepared Statements via D1 binding |
      
       - ## Project Structure
      
@@ -35,6 +35,7 @@ A serverless AI proxy layer built on **Cloudflare Workers** with **D1** (SQLite 
         ## Setup
 
         ### Prerequisites
+
         - Node.js 18+
         - - Cloudflare account with Workers enabled
           - - Wrangler CLI: `npm install -g wrangler`
@@ -78,6 +79,7 @@ A serverless AI proxy layer built on **Cloudflare Workers** with **D1** (SQLite 
               This Worker is one component of the **TradeForge** system — a full-stack AI-powered CRM built for HVAC, plumbing, electrical, and general contracting businesses in Calgary and Alberta.
 
               Related systems:
+
               - **TradeForge CRM** — lead tracking, SMS follow-up, job pipeline
               - - **AI Receptionist** — missed call → SMS automation via n8n + Claude API
                 - - **Cloudflare Pages frontend** — React/TypeScript dashboard
